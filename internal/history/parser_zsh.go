@@ -30,6 +30,7 @@ func (p *ZshParser) Parse(r io.Reader) ([]Entry, error) {
 					Timestamp: currentTimestamp,
 				})
 				currentCmd.Reset()
+				currentTimestamp = time.Time{}
 			}
 
 			timeStamp, command, err := parseZshLine(line)
@@ -45,6 +46,11 @@ func (p *ZshParser) Parse(r io.Reader) ([]Entry, error) {
 		if currentCmd.Len() > 0 {
 			currentCmd.WriteString("\n")
 			currentCmd.WriteString(line)
+			continue
+		}
+
+		if strings.TrimSpace(line) != "" {
+			entries = append(entries, Entry{Command: line})
 		}
 	}
 
@@ -80,7 +86,7 @@ func parseZshLine(line string) (time.Time, string, error) {
 
 	timeStampUnix, err := strconv.ParseInt(metaParts[0], 10, 64)
 	if err != nil {
-		return time.Time{}, command, nil
+		return time.Time{}, command, fmt.Errorf("zsh timestamp invalid %q: %w", metaParts[0], err)
 	}
 
 	return time.Unix(timeStampUnix, 0), command, nil
