@@ -16,10 +16,12 @@ type Parser interface {
 func NewParser() Parser {
 	shell := os.Getenv("SHELL")
 	switch {
+	case strings.Contains(shell, "bash"):
+		return &BashParser{}
 	case strings.Contains(shell, "zsh"):
 		return &ZshParser{}
 	default:
-		return &ZshParser{} // Default to BashParser if shell is unknown
+		return &BashParser{} // Default to BashParser if shell is unknown
 	}
 }
 
@@ -28,10 +30,12 @@ func LoadHistory() ([]Entry, error) {
 	var path string
 
 	switch {
+	case strings.Contains(shell, "bash"):
+		path = filepath.Join(os.Getenv("HOME"), ".bash_history")
 	case strings.Contains(shell, "zsh"):
 		path = filepath.Join(os.Getenv("HOME"), ".zsh_history")
 	default:
-		path = filepath.Join(os.Getenv("HOME"), ".zsh_history")
+		path = filepath.Join(os.Getenv("HOME"), ".bash_history")
 	}
 
 	file, err := os.Open(path)
