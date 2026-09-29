@@ -14,7 +14,7 @@ type Result struct {
 
 type FuzzyFinder struct{}
 
-func (f *FuzzyFinder) Find(query string, entries []history.Entry) []Result {
+func (f *FuzzyFinder) FindEntries(query string, entries []history.Entry) []Result {
 	if query == "" {
 		result := make([]Result, len(entries))
 
@@ -28,7 +28,6 @@ func (f *FuzzyFinder) Find(query string, entries []history.Entry) []Result {
 	}
 
 	commands := make([]string, len(entries))
-
 	for i, entry := range entries {
 		commands[i] = entry.Command
 	}
