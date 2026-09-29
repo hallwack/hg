@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -65,6 +66,7 @@ func (p *ZshParser) Parse(r io.Reader) ([]Entry, error) {
 		return nil, err
 	}
 
+	slices.Reverse(entries)
 	return entries, nil
 }
 

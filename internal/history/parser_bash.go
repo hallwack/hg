@@ -3,6 +3,7 @@ package history
 import (
 	"bufio"
 	"io"
+	"slices"
 	"strconv"
 	"strings"
 	"time"
@@ -60,5 +61,6 @@ func (p *BashParser) Parse(r io.Reader) ([]Entry, error) {
 		return nil, err
 	}
 
+	slices.Reverse(entries)
 	return entries, nil
 }
